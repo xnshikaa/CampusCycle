@@ -1,11 +1,13 @@
 package com.javaoops.campuscycle.model;
 
 public class Seller extends User{
-    super(userId, name, universityId, email, "seller");
+
+    public Seller (String userId, String name, String universityId, String email){
+        super(userId, name, universityId, email, "seller");
+    }
 
     private boolean isPaymentVerified;
     private String paymentAccountId;
-
 
     @Override
     public void login() {
