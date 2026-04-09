@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:text="List a Product"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#2E7D32"
+            android:textColor="@color/textPrimary"
             android:layout_marginBottom="24dp"/>
 
         <EditText
@@ -26,7 +26,10 @@
             android:hint="Product Title *"
             android:inputType="textCapSentences"
             android:layout_marginBottom="16dp"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textSecondary"
+            android:backgroundTint="@color/primary"/>
 
         <EditText
             android:id="@+id/etDescription"
@@ -37,7 +40,10 @@
             android:minLines="3"
             android:gravity="top"
             android:layout_marginBottom="16dp"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textSecondary"
+            android:backgroundTint="@color/primary"/>
 
         <EditText
             android:id="@+id/etCategory"
@@ -46,7 +52,10 @@
             android:hint="Category (e.g. Books, Electronics)"
             android:inputType="textCapWords"
             android:layout_marginBottom="16dp"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textSecondary"
+            android:backgroundTint="@color/primary"/>
 
         <EditText
             android:id="@+id/etMrp"
@@ -55,7 +64,10 @@
             android:hint="Original MRP (₹) *"
             android:inputType="numberDecimal"
             android:layout_marginBottom="16dp"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textSecondary"
+            android:backgroundTint="@color/primary"/>
 
         <EditText
             android:id="@+id/etPrice"
@@ -64,14 +76,17 @@
             android:hint="Your Selling Price (₹) — must be ≤ 75% of MRP *"
             android:inputType="numberDecimal"
             android:layout_marginBottom="8dp"
-            android:padding="12dp"/>
+            android:padding="12dp"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textSecondary"
+            android:backgroundTint="@color/primary"/>
 
         <TextView
             android:id="@+id/tvPriceHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Max allowed: —"
-            android:textColor="#757575"
+            android:textColor="@color/textPrimary"
             android:textSize="12sp"
             android:layout_marginBottom="24dp"/>
 
@@ -80,15 +95,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="List Product"
-            android:backgroundTint="#2E7D32"
-            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/white"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tvError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#C62828"
+            android:textColor="@color/textPrimary"
             android:textSize="13sp"
             android:layout_marginTop="12dp"
             android:visibility="gone"/>

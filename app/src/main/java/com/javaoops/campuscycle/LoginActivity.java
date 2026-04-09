@@ -11,8 +11,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.javaoops.campuscycle.dao.DatabaseHelper;
+import com.javaoops.campuscycle.dao.UserDAO;
+import com.javaoops.campuscycle.model.Buyer;
+import com.javaoops.campuscycle.model.Seller;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,7 +27,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         setContentView(R.layout.activity_login);
+
+        // TEMP: seed a test buyer - remove after testing
+        UserDAO userDAO = new UserDAO(this);
+        Buyer testBuyer = new Buyer("buyer001", "Test Buyer", "UNI123", "test@uni.com");
+        userDAO.insertUser(testBuyer);
+        Seller testSeller = new Seller("seller001", "Test Seller", "UNI456", "seller@uni.com");
+        userDAO.insertUser(testSeller);
+        getSharedPreferences("CampusCycleSession", MODE_PRIVATE).edit().clear().apply();
 
         etEmail        = findViewById(R.id.etEmail);
         etUniversityId = findViewById(R.id.etUniversityId);

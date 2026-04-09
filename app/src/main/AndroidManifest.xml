@@ -26,6 +26,9 @@
         <activity android:name=".SellerDashboardActivity"/>
         <activity android:name=".AddProductActivity"/>
         <activity android:name=".NotificationsActivity"/>
+        <activity android:name=".MarketplaceActivity"/>
+        <activity android:name=".CartActivity"/>
+        <activity android:name=".OrderHistoryActivity"/>
     </application>
 
 </manifest>

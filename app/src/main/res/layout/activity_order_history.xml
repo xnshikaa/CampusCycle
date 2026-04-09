@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#FAFAFA">
+    android:background="@color/background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Order History"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/textPrimary"
             android:textSize="20sp"
             android:textStyle="bold"/>
 
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0 orders"
-            android:textColor="#C8E6C9"
+            android:textColor="@color/textPrimary"
             android:textSize="14sp"/>
     </LinearLayout>
 
@@ -82,7 +82,6 @@
             android:textSize="11sp"/>
     </LinearLayout>
 
-    <!-- Orders list -->
     <ListView
         android:id="@+id/lvOrders"
         android:layout_width="match_parent"
@@ -98,7 +97,7 @@
         android:layout_height="wrap_content"
         android:text="No orders yet.\nStart shopping in the Marketplace!"
         android:gravity="center"
-        android:textColor="#9E9E9E"
+        android:textColor="@color/textPrimary"
         android:textSize="15sp"
         android:padding="40dp"
         android:visibility="gone"/>

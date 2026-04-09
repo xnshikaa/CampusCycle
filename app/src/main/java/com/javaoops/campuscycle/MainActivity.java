@@ -25,19 +25,5 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        // ✅ YOUR TEST CODE STARTS HERE
-
-        Buyer buyer = new Buyer("B1", "Anshika", "ATLAS001", "anshika@atlas.edu");
-        buyer.login();
-
-        Product product = new Product("P1", "Calculator", "Casio fx-991", "Electronics", 1000, 700, "S1");
-
-        Log.d("TEST", product.getTitle());
-        Log.d("TEST", "Price: " + product.getPrice());
-
-        Order order = new Order("O1", buyer.getUserId(), product.getProductId());
-
-        Log.d("TEST", "Order status: " + order.getStatus());
     }
 }

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="32dp"
-    android:background="#FAFAFA">
+    android:background="@color/background">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,7 +13,7 @@
         android:text="CampusCycle"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textColor="#2E7D32"
+        android:textColor="@color/textPrimary"
         android:layout_marginBottom="4dp"/>
 
     <TextView
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:text="Second-Hand Campus Commerce"
         android:textSize="14sp"
-        android:textColor="#757575"
+        android:textColor="@color/textPrimary"
         android:layout_marginBottom="40dp"/>
 
     <EditText
@@ -31,7 +31,10 @@
         android:hint="University Email"
         android:inputType="textEmailAddress"
         android:layout_marginBottom="16dp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textSecondary"
+        android:backgroundTint="@color/primary"/>
 
     <EditText
         android:id="@+id/etUniversityId"
@@ -40,22 +43,25 @@
         android:hint="University ID"
         android:inputType="text"
         android:layout_marginBottom="28dp"
-        android:padding="12dp"/>
+        android:padding="12dp"
+        android:textColor="@color/textPrimary"
+        android:textColorHint="@color/textSecondary"
+        android:backgroundTint="@color/primary"/>
 
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:backgroundTint="#2E7D32"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
         android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/tvError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#C62828"
+        android:textColor="@color/textPrimary"
         android:textSize="13sp"
         android:layout_marginTop="12dp"
         android:visibility="gone"/>
