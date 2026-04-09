@@ -34,7 +34,7 @@ public class ProductService implements Searchable {
         try {
             if (!validatePrice(price, mrp)) {
                 throw new InvalidPriceException(
-                        "Price must be ≤ 75% of MRP. MRP: " + mrp + ", Price entered: " + price);
+                        "Price must be <= 75% of MRP. MRP: " + mrp + ", Price entered: " + price);
             }
             String productId = UUID.randomUUID().toString();
             Product product  = new Product(productId, title, description, category, mrp, price, currentSellerId);

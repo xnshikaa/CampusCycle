@@ -73,7 +73,7 @@
             android:id="@+id/etPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Your Selling Price (₹) — must be ≤ 75% of MRP *"
+            android:hint="Your Selling Price (₹) must be less than or equal to 75% of MRP *"
             android:inputType="numberDecimal"
             android:layout_marginBottom="8dp"
             android:padding="12dp"
@@ -85,7 +85,7 @@
             android:id="@+id/tvPriceHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max allowed: —"
+            android:text="Max allowed: -"
             android:textColor="@color/textPrimary"
             android:textSize="12sp"
             android:layout_marginBottom="24dp"/>

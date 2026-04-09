@@ -29,6 +29,7 @@
         <activity android:name=".MarketplaceActivity"/>
         <activity android:name=".CartActivity"/>
         <activity android:name=".OrderHistoryActivity"/>
+        <activity android:name=".RegisterActivity"/>
     </application>
 
 </manifest>

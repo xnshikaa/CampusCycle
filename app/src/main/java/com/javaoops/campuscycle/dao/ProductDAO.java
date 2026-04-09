@@ -17,7 +17,6 @@ public class ProductDAO {
         dbHelper = new DatabaseHelper(context);
     }
 
-    // INSERT a new product into the database
     public boolean insertProduct(Product product) {
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -145,11 +144,9 @@ public class ProductDAO {
         p.setDescription(cursor.getString(cursor.getColumnIndexOrThrow("description")));
         p.setCategory(cursor.getString(cursor.getColumnIndexOrThrow("category")));
         p.setMrp(cursor.getDouble(cursor.getColumnIndexOrThrow("mrp")));
-        // setPrice() throws IllegalArgumentException if price > 0.75 * mrp
         try {
             p.setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow("price")));
         } catch (IllegalArgumentException e) {
-            // Price stored in DB is already validated; safe to set raw if setPrice rejects it
             e.printStackTrace();
         }
         p.setSellerId(cursor.getString(cursor.getColumnIndexOrThrow("sellerId")));

@@ -82,7 +82,7 @@ public class NotificationsActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM, hh:mm a", Locale.getDefault());
 
         for (Notification n : notificationList) {
-            String readStatus = n.isRead() ? "✓" : "🔵";
+            String readStatus = n.isRead() ? "(Read)" : "(New)";
             String time       = sdf.format(new Date(n.getTimestamp()));
             String item       = readStatus + "  " + n.getMessage() + "\n" + time;
             displayList.add(item);

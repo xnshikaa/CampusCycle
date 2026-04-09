@@ -8,12 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.javaoops.campuscycle.dao.OrderDAO;
 import com.javaoops.campuscycle.dao.ProductDAO;
+import com.javaoops.campuscycle.model.Order;
 import com.javaoops.campuscycle.model.Product;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ public class MarketplaceActivity extends AppCompatActivity {
     private Button btnCatAll, btnCatBooks, btnCatElectronics, btnCatClothing, btnCatFurniture, btnCatOther;
     private ListView lvProducts;
     private TextView tvEmpty;
+    private Switch switchRole;
 
     private ProductDAO productDAO;
     private ArrayList<Product> allProducts = new ArrayList<>();
@@ -63,6 +67,7 @@ public class MarketplaceActivity extends AppCompatActivity {
         btnCatClothing     = findViewById(R.id.btnCatClothing);
         btnCatFurniture    = findViewById(R.id.btnCatFurniture);
         btnCatOther        = findViewById(R.id.btnCatOther);
+        switchRole         = findViewById(R.id.switchRoleMarketplace);
 
         btnCart.setOnClickListener(v ->
                 startActivity(new Intent(this, CartActivity.class)));
@@ -84,6 +89,22 @@ public class MarketplaceActivity extends AppCompatActivity {
             addToCart(selected);
         });
 
+        SharedPreferences modePrefs = getSharedPreferences("CampusCycleSession", MODE_PRIVATE);
+        String currentMode = modePrefs.getString("currentMode", "buyer");
+        switchRole.setChecked(currentMode.equals("seller"));
+        switchRole.setText(currentMode.equals("seller") ? "Seller Mode" : "Buyer Mode");
+
+        switchRole.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            String newMode = isChecked ? "seller" : "buyer";
+            switchRole.setText(isChecked ? "Seller Mode" : "Buyer Mode");
+            modePrefs.edit().putString("currentMode", newMode).apply();
+            Toast.makeText(this, "Switched to " + newMode + " mode", Toast.LENGTH_SHORT).show();
+            if (isChecked) {
+                startActivity(new Intent(this, SellerDashboardActivity.class));
+                finish();
+            }
+        });
+
         loadProducts();
     }
 
@@ -98,7 +119,7 @@ public class MarketplaceActivity extends AppCompatActivity {
             }
             applyFilters();
         } catch (Exception e) {
-            Toast.makeText(this, "Failed to load products: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to load products", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -159,7 +180,7 @@ public class MarketplaceActivity extends AppCompatActivity {
             for (Product p : filteredProducts) {
                 displayList.add(
                         p.getTitle() + "\n" +
-                                p.getCategory() + "  •  ₹" + String.format("%.2f", p.getPrice()) +
+                                p.getCategory() + "  |  ₹" + String.format("%.2f", p.getPrice()) +
                                 "  (MRP ₹" + String.format("%.2f", p.getMrp()) + ")\n" +
                                 p.getDescription()
                 );
@@ -176,27 +197,24 @@ public class MarketplaceActivity extends AppCompatActivity {
 
     private void addToCart(Product product) {
         try {
-            SharedPreferences cartPrefs = getSharedPreferences("cart_" + currentBuyerId, MODE_PRIVATE);
-            String existingCart = cartPrefs.getString("cart_items", "");
+            OrderDAO orderDAO = new OrderDAO(this);
+            Order order = new Order();
+            order.setOrderId(java.util.UUID.randomUUID().toString());
+            order.setProductId(product.getProductId());
+            order.setBuyerId(currentBuyerId);
+            order.setSellerId(product.getSellerId());
+            order.setAmountPaid(product.getPrice());
+            order.setOrderStatus("pending");
+            order.setTimestamp(System.currentTimeMillis());
+            
+            orderDAO.insertOrder(order);
 
-            if (existingCart.contains(product.getProductId())) {
-                Toast.makeText(this, "Already in cart.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            String updatedCart = existingCart.isEmpty()
-                    ? product.getProductId()
-                    : existingCart + "," + product.getProductId();
-
-            cartPrefs.edit().putString("cart_items", updatedCart).apply();
-
-            // Increment cartCount in DB
             product.setCartCount(product.getCartCount() + 1);
             productDAO.updateProduct(product);
 
-            Toast.makeText(this, "\"" + product.getTitle() + "\" added to cart!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Added to cart.", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Could not add to cart: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Could not add to cart", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -63,4 +63,12 @@ public class OrderDAO {
 
         return list;
     }
+
+    public void updateStatus(String orderId, String newStatus) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("orderStatus", newStatus);
+        db.update("orders", values, "orderId=?", new String[]{orderId});
+        db.close();
+    }
 }

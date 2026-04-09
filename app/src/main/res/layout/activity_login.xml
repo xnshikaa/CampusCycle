@@ -66,4 +66,13 @@
         android:layout_marginTop="12dp"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/tvGoToRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New user? Register here"
+        android:textColor="@color/primary"
+        android:textSize="14sp"
+        android:layout_marginTop="20dp"/>
+
 </LinearLayout>

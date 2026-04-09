@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText  etEmail, etUniversityId;
     private Button    btnLogin;
-    private TextView  tvError;
+    private TextView  tvError, tvGoToRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         btnLogin.setOnClickListener(v -> handleLogin());
+
+        tvGoToRegister = findViewById(R.id.tvGoToRegister);
+        tvGoToRegister.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+        });
     }
 
     private void handleLogin() {

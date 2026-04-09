@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.javaoops.campuscycle.dao.ProductDAO;
+import com.javaoops.campuscycle.model.Product;
 import com.javaoops.campuscycle.service.ProductService;
 
 public class AddProductActivity extends AppCompatActivity {
@@ -21,6 +23,9 @@ public class AddProductActivity extends AppCompatActivity {
     private Button   btnSubmit;
 
     private ProductService productService;
+    private ProductDAO productDAO;
+    private String editProductId;
+    private boolean isEditMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,7 @@ public class AddProductActivity extends AppCompatActivity {
         String            sellerId = prefs.getString("userId", "");
 
         productService = new ProductService(this, sellerId);
+        productDAO     = new ProductDAO(this);
 
         etTitle       = findViewById(R.id.etTitle);
         etDescription = findViewById(R.id.etDescription);
@@ -41,6 +47,18 @@ public class AddProductActivity extends AppCompatActivity {
         tvError       = findViewById(R.id.tvError);
         btnSubmit     = findViewById(R.id.btnSubmit);
 
+        editProductId = getIntent().getStringExtra("productId");
+        isEditMode    = editProductId != null;
+
+        if (isEditMode) {
+            etTitle.setText(getIntent().getStringExtra("title"));
+            etDescription.setText(getIntent().getStringExtra("description"));
+            etCategory.setText(getIntent().getStringExtra("category"));
+            etMrp.setText(String.valueOf(getIntent().getDoubleExtra("mrp", 0)));
+            etPrice.setText(String.valueOf(getIntent().getDoubleExtra("price", 0)));
+            btnSubmit.setText("Update Product");
+        }
+
         etMrp.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -49,9 +67,9 @@ public class AddProductActivity extends AppCompatActivity {
                 try {
                     double mrp = Double.parseDouble(s.toString());
                     double max = mrp * 0.75;
-                    tvPriceHint.setText(String.format("Max allowed: ₹%.2f", max));
+                    tvPriceHint.setText(String.format("Max allowed: %.2f", max));
                 } catch (NumberFormatException e) {
-                    tvPriceHint.setText("Max allowed: —");
+                    tvPriceHint.setText("Max allowed: --");
                 }
             }
         });
@@ -90,19 +108,37 @@ public class AddProductActivity extends AppCompatActivity {
         }
 
         if (!productService.validatePrice(price, mrp)) {
-            showError(String.format("Price ₹%.2f exceeds 75%% of MRP (max ₹%.2f).", price, mrp * 0.75));
+            showError(String.format("Price %.2f exceeds 75%% of MRP (max %.2f).", price, mrp * 0.75));
             return;
         }
 
         if (category.isEmpty()) category = "General";
 
-        boolean success = productService.addProduct(title, description, category, mrp, price);
+        if (isEditMode) {
+            Product product = new Product();
+            product.setProductId(editProductId);
+            product.setTitle(title);
+            product.setDescription(description);
+            product.setCategory(category);
+            product.setMrp(mrp);
+            product.setPrice(price);
+            product.setStatus("active");
 
-        if (success) {
-            Toast.makeText(this, "\"" + title + "\" listed successfully!", Toast.LENGTH_SHORT).show();
-            finish(); // go back to SellerDashboardActivity
+            boolean success = productDAO.updateProduct(product);
+            if (success) {
+                Toast.makeText(this, "\"" + title + "\" updated successfully!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                showError("Failed to update product. Please try again.");
+            }
         } else {
-            showError("Failed to list product. Please try again.");
+            boolean success = productService.addProduct(title, description, category, mrp, price);
+            if (success) {
+                Toast.makeText(this, "\"" + title + "\" listed successfully!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                showError("Failed to list product. Please try again.");
+            }
         }
     }
 

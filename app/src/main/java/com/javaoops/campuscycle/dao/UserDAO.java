@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.javaoops.campuscycle.model.Buyer;
 import com.javaoops.campuscycle.model.Seller;
 import com.javaoops.campuscycle.model.User;
 
@@ -40,7 +41,11 @@ public class UserDAO {
             String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
             int isVerified = cursor.getInt(cursor.getColumnIndexOrThrow("isVerified"));
 
-            user = new Seller(userId, name, universityId, email);
+            if ("seller".equals(role)) {
+                user = new Seller(userId, name, universityId, email);
+            } else {
+                user = new Buyer(userId, name, universityId, email);
+            }
             user.setRole(role);
             user.setVerified(isVerified == 1);
         }
@@ -52,7 +57,6 @@ public class UserDAO {
     public boolean updateUser(User user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-
         values.put("userId", user.getUserId());
         values.put("name", user.getName());
         values.put("universityId", user.getUniversityId());
@@ -60,9 +64,6 @@ public class UserDAO {
         values.put("role", user.getRole());
         values.put("isVerified", user.isVerified() ? 1 : 0);
         long result = db.update("users", values, "userId=?", new String[]{user.getUserId()});
-        // but this time call db.update() not db.insert()
-        // db.update("users", values, "userId=?", new String[]{user.getUserId()})
-        // return result > 0
         db.close();
         return result > 0;
     }

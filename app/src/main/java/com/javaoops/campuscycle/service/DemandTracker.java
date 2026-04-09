@@ -36,10 +36,10 @@ public class DemandTracker implements Runnable {
                                     || product.getCartCount() > CART_THRESHOLD;
 
                     if (highDemand) {
-                        String message = "High demand on \"" + product.getTitle() + "\"!"
-                                + " Views: " + product.getViewCount()
-                                + " | Cart adds: " + product.getCartCount()
-                                + ". Consider adjusting your price.";
+                        String message = "High demand for " + product.getTitle() + "! "
+                                + "Total views: " + product.getViewCount()
+                                + ". Total cart adds: " + product.getCartCount()
+                                + ". Please consider adjusting your price.";
 
                         notificationService.sendNotification(
                                 message,
