@@ -49,5 +49,28 @@ public class UserDAO {
         return user;
     }
 
+    public boolean updateUser(User user) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put("userId", user.getUserId());
+        values.put("name", user.getName());
+        values.put("universityId", user.getUniversityId());
+        values.put("email", user.getEmail());
+        values.put("role", user.getRole());
+        values.put("isVerified", user.isVerified() ? 1 : 0);
+        long result = db.update("users", values, "userId=?", new String[]{user.getUserId()});
+        // but this time call db.update() not db.insert()
+        // db.update("users", values, "userId=?", new String[]{user.getUserId()})
+        // return result > 0
+        db.close();
+        return result > 0;
+    }
+
+    public boolean deleteUser(String userId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long result = db.delete("users", "userId=?", new String[]{userId});
+        db.close();
+        return result > 0;
+    }
 }

@@ -78,7 +78,7 @@ public class Product {
            throw new IllegalArgumentException("Price cannot be greater than 75% of MRP.");
         }
         else{
-            this.price=price;
+            this.setPrice(price);
         }
     }
 
