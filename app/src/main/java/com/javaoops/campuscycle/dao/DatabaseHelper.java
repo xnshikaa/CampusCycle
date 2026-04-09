@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "campuscycle.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "mrp REAL, price REAL, sellerId TEXT, status TEXT, viewCount INTEGER, cartCount INTEGER, timestamp INTEGER)");
         db.execSQL("CREATE TABLE orders (orderId TEXT PRIMARY KEY, productId TEXT, buyerId TEXT, sellerId TEXT, amountPaid REAL, orderStatus TEXT, timestamp INTEGER)");
         db.execSQL("CREATE TABLE notifications(notifId TEXT PRIMARY KEY, targetUserId TEXT, productId TEXT, type TEXT, message TEXT, isRead INTEGER, timestamp INTEGER)");
+        db.execSQL("CREATE TABLE cart (cartId TEXT PRIMARY KEY, buyerId TEXT, productId TEXT, timestamp INTEGER)");
     }
 
     @Override
