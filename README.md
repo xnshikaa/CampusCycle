@@ -108,6 +108,7 @@ Card-based layout design
 Seller Command Center dashboard
 Product detail pages
 Mobile-optimized UI
+
 ⚙️ Features Implemented
 Role-based authentication (Buyer / Seller)
 University email validation
@@ -117,24 +118,28 @@ Order status tracking
 Offer negotiation system
 Inventory management
 Seller dashboard
+
 🚧 Challenges Faced
 Cart data not syncing correctly
 Marketplace not displaying items initially
 UI responsiveness issues
 Handling consistent userId across flows
 Connecting UI with backend logic
+
 🧠 Solutions Implemented
 Fixed DAO-service integration
 Ensured consistent user session handling
 Improved navigation flow between activities
 Refactored UI for mobile responsiveness
 Connected all UI buttons to backend logic
+
 🔮 Future Enhancements
 Payment gateway integration
 Real-time chat system
 Push notifications
 Cloud database (Firebase / AWS)
 AI-based price recommendations
+
 📊 Project Status
 Fully functional
 End-to-end e-commerce flow implemented
