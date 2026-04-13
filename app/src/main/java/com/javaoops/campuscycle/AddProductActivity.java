@@ -1,5 +1,9 @@
 package com.javaoops.campuscycle;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +27,9 @@ import com.javaoops.campuscycle.dao.UserDAO;
 import com.javaoops.campuscycle.model.Notification;
 import com.javaoops.campuscycle.model.Product;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -36,16 +43,22 @@ public class AddProductActivity extends AppCompatActivity {
     private ImageView ivProductImage;
 
     private String selectedImageUri = ""; 
-    private final String sellerId = "S1"; 
+    private String sellerId; 
 
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
                 if (uri != null) {
-                    selectedImageUri = uri.toString();
-                    ivProductImage.setImageURI(uri);
-                    ivProductImage.setVisibility(View.VISIBLE);
-                    placeholderContainer.setVisibility(View.GONE);
+                    try {
+                        String localPath = saveImageToInternalStorage(uri);
+                        selectedImageUri = localPath;
+                        ivProductImage.setImageURI(Uri.fromFile(new File(localPath)));
+                        ivProductImage.setVisibility(View.VISIBLE);
+                        placeholderContainer.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Failed to process image", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 }
             }
     );
@@ -54,6 +67,15 @@ public class AddProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
+
+        SharedPreferences prefs = getSharedPreferences("CampusCycleSession", MODE_PRIVATE);
+        sellerId = prefs.getString("userId", null);
+
+        if (sellerId == null) {
+            Toast.makeText(this, "Session expired", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         etName          = findViewById(R.id.etProductName);
         etDescription   = findViewById(R.id.etDescription);
@@ -76,10 +98,24 @@ public class AddProductActivity extends AppCompatActivity {
         cvImagePicker.setOnClickListener(v -> openGallery());
     }
 
+    private String saveImageToInternalStorage(Uri uri) throws Exception {
+        InputStream inputStream = getContentResolver().openInputStream(uri);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        
+        String fileName = "prod_" + System.currentTimeMillis() + ".jpg";
+        File file = new File(getFilesDir(), fileName);
+        
+        FileOutputStream fos = new FileOutputStream(file);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+        fos.close();
+        inputStream.close();
+        
+        return file.getAbsolutePath();
+    }
+
     private void openGallery() {
         galleryLauncher.launch("image/*");
     }
-
 
     private void setupCategorySpinner() {
         String[] categories = {"Books", "Tech", "Cycle", "Gear", "Other"};

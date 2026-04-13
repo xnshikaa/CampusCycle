@@ -5,9 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.javaoops.campuscycle.model.Buyer;
-import com.javaoops.campuscycle.model.Seller;
 import com.javaoops.campuscycle.model.User;
+
+import java.util.ArrayList;
 
 public class UserDAO {
     private DatabaseHelper dbHelper;
@@ -23,7 +23,6 @@ public class UserDAO {
         values.put("name", user.getName());
         values.put("universityId", user.getUniversityId());
         values.put("email", user.getEmail());
-        values.put("role", user.getRole());
         values.put("isVerified", user.isVerified() ? 1 : 0);
         long result = db.insert("users", null, values);
         db.close();
@@ -38,15 +37,9 @@ public class UserDAO {
             String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
             String universityId = cursor.getString(cursor.getColumnIndexOrThrow("universityId"));
             String email = cursor.getString(cursor.getColumnIndexOrThrow("email"));
-            String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
             int isVerified = cursor.getInt(cursor.getColumnIndexOrThrow("isVerified"));
 
-            if ("seller".equals(role)) {
-                user = new Seller(userId, name, universityId, email);
-            } else {
-                user = new Buyer(userId, name, universityId, email);
-            }
-            user.setRole(role);
+            user = new User(userId, name, universityId, email);
             user.setVerified(isVerified == 1);
         }
         cursor.close();
@@ -61,17 +54,16 @@ public class UserDAO {
         values.put("name", user.getName());
         values.put("universityId", user.getUniversityId());
         values.put("email", user.getEmail());
-        values.put("role", user.getRole());
         values.put("isVerified", user.isVerified() ? 1 : 0);
         long result = db.update("users", values, "userId=?", new String[]{user.getUserId()});
         db.close();
         return result > 0;
     }
 
-    public java.util.ArrayList<String> getAllBuyerIds() {
-        java.util.ArrayList<String> ids = new java.util.ArrayList<>();
+    public ArrayList<String> getAllBuyerIds() {
+        ArrayList<String> ids = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query("users", new String[]{"userId"}, "role=?", new String[]{"buyer"}, null, null, null);
+        Cursor cursor = db.query("users", new String[]{"userId"}, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 ids.add(cursor.getString(0));

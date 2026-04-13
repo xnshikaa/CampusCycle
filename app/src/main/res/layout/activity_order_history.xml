@@ -78,7 +78,7 @@
                         android:background="@drawable/btn_primary_gradient"
                         android:text="All History"
                         android:textAllCaps="false"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:textSize="12sp" />
 
                     <Button
@@ -90,7 +90,7 @@
                         android:background="@drawable/segmented_control_bg"
                         android:text="Pending Tracking"
                         android:textAllCaps="false"
-                        android:textColor="@color/text_body"
+                        android:textColor="@color/black"
                         android:textSize="12sp" />
 
                     <Button
@@ -102,7 +102,7 @@
                         android:background="@drawable/segmented_control_bg"
                         android:text="Loop Secured"
                         android:textAllCaps="false"
-                        android:textColor="@color/text_body"
+                        android:textColor="@color/black"
                         android:textSize="12sp" />
 
                     <Button
@@ -113,7 +113,7 @@
                         android:background="@drawable/segmented_control_bg"
                         android:text="Archived"
                         android:textAllCaps="false"
-                        android:textColor="@color/text_body"
+                        android:textColor="@color/black"
                         android:textSize="12sp" />
                 </LinearLayout>
             </HorizontalScrollView>

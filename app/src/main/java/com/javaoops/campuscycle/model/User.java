@@ -1,72 +1,44 @@
 package com.javaoops.campuscycle.model;
 
-public abstract class User {
+public class User {
     private String userId;
     private String name;
     private String universityId;
     private String email;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUniversityId() {
-        return universityId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean verified) {
-        isVerified = verified;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setUniversityId(String universityId) {
-        this.universityId = universityId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    private String role;
     private boolean isVerified;
 
-    public User(String userId, String name, String universityId, String email, String role) {
+    public User(String userId, String name, String universityId, String email) {
         this.userId = userId;
         this.name = name;
         this.universityId = universityId;
         this.email = email;
-        this.role = role;
         this.isVerified = false;
     }
 
-    public abstract void login();
-    public abstract void logout();
-    public abstract String getProfile();
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getUniversityId() { return universityId; }
+    public void setUniversityId(String universityId) { this.universityId = universityId; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public boolean isVerified() { return isVerified; }
+    public void setVerified(boolean verified) { isVerified = verified; }
+
+    public void login() {
+        // Implementation for login logic if needed
+    }
+
+    public void logout() {
+        // Implementation for logout logic if needed
+    }
+
+    public String getProfile() {
+        return "Name: " + name + "\nID: " + universityId + "\nEmail: " + email;
+    }
 }

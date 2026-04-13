@@ -57,7 +57,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
             try {
-                holder.ivProduct.setImageURI(android.net.Uri.parse(product.getImageUri()));
+                String uriStr = product.getImageUri();
+                if (uriStr.startsWith("/") || uriStr.startsWith("file://")) {
+                    holder.ivProduct.setImageURI(android.net.Uri.fromFile(new java.io.File(uriStr.replace("file://", ""))));
+                } else {
+                    holder.ivProduct.setImageURI(android.net.Uri.parse(uriStr));
+                }
             } catch (Exception e) {
                 holder.ivProduct.setImageResource(R.drawable.card_background);
             }

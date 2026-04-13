@@ -134,16 +134,16 @@ public class OrderHistoryActivity extends AppCompatActivity {
         Button[] btns = {btnAll, btnPending, btnConfirmed, btnCompleted};
         for (Button b : btns) {
             b.setBackgroundResource(R.drawable.segmented_control_bg);
-            b.setTextColor(getResources().getColor(R.color.text_body));
+            b.setTextColor(getResources().getColor(R.color.black));
         }
 
         Button active = btnAll;
         if (currentStatusFilter.equals("pending"))   active = btnPending;
-        if (currentStatusFilter.equals("confirmed")) active = btnConfirmed;
-        if (currentStatusFilter.equals("completed")) active = btnCompleted;
+        if (currentStatusFilter.equalsIgnoreCase("confirmed")) active = btnConfirmed;
+        if (currentStatusFilter.equalsIgnoreCase("completed")) active = btnCompleted;
 
         active.setBackgroundResource(R.drawable.btn_primary_gradient);
-        active.setTextColor(getResources().getColor(R.color.white));
+        active.setTextColor(getResources().getColor(R.color.black));
     }
 
     @Override

@@ -40,8 +40,27 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         
         if (p != null) {
             holder.tvTitle.setText(p.getTitle());
+            
+            // Bind image
+            if (p.getImageUri() != null && !p.getImageUri().isEmpty()) {
+                try {
+                    String uriStr = p.getImageUri();
+                    if (uriStr.startsWith("/") || uriStr.startsWith("file://")) {
+                        holder.ivProduct.setImageURI(android.net.Uri.fromFile(new java.io.File(uriStr.replace("file://", ""))));
+                    } else {
+                        holder.ivProduct.setImageURI(android.net.Uri.parse(uriStr));
+                    }
+                } catch (Exception e) {
+                    holder.ivProduct.setImageResource(R.drawable.card_background);
+                }
+            } else if (p.getImageResId() != 0) {
+                holder.ivProduct.setImageResource(p.getImageResId());
+            } else {
+                holder.ivProduct.setImageResource(R.drawable.card_background);
+            }
         } else {
             holder.tvTitle.setText("Loop Item #" + order.getProductId().substring(0, 4));
+            holder.ivProduct.setImageResource(R.drawable.card_background);
         }
         
         holder.tvPrice.setText("₹" + (int)order.getAmountPaid());
@@ -65,8 +84,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     }
 
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDate, tvStatus, tvOrderPrice;
-        TextView tvPrice;
+        TextView tvTitle, tvDate, tvStatus, tvPrice;
+        android.widget.ImageView ivProduct;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,6 +93,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             tvDate = itemView.findViewById(R.id.tvOrderDate);
             tvStatus = itemView.findViewById(R.id.tvOrderStatus);
             tvPrice = itemView.findViewById(R.id.tvOrderPrice);
+            ivProduct = itemView.findViewById(R.id.ivOrderProduct);
         }
     }
 }

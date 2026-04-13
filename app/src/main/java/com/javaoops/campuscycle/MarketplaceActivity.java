@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,14 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.javaoops.campuscycle.dao.OrderDAO;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.javaoops.campuscycle.dao.ProductDAO;
-import com.javaoops.campuscycle.model.Cart;
-import com.javaoops.campuscycle.model.Order;
 import com.javaoops.campuscycle.model.Product;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MarketplaceActivity extends AppCompatActivity {
 
@@ -32,6 +29,8 @@ public class MarketplaceActivity extends AppCompatActivity {
     private Button btnCatAll, btnCatBooks, btnCatElectronics, btnCatClothing, btnCatFurniture, btnCatOther;
     private RecyclerView rvProducts;
     private TextView tvEmpty;
+    private FloatingActionButton fabAddProduct;
+    private BottomNavigationView bottomNavigation;
 
     private ProductDAO productDAO;
     private ArrayList<Product> allProducts = new ArrayList<>();
@@ -70,7 +69,32 @@ public class MarketplaceActivity extends AppCompatActivity {
         btnCatClothing     = findViewById(R.id.btnCatClothing);
         btnCatFurniture    = findViewById(R.id.btnCatFurniture);
         btnCatOther        = findViewById(R.id.btnCatOther);
-        tvEmpty            = findViewById(R.id.tvEmpty);
+        fabAddProduct      = findViewById(R.id.fabAddProduct);
+        bottomNavigation   = findViewById(R.id.bottomNavigation);
+
+        // Setup Bottom Navigation
+        bottomNavigation.setSelectedItemId(R.id.nav_market);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                // Already here or Home dashboard? Marketplace is Market.
+                return true;
+            } else if (id == R.id.nav_market) {
+                return true;
+            } else if (id == R.id.nav_sell) {
+                startActivity(new Intent(this, SellerDashboardActivity.class));
+                return true;
+            } else if (id == R.id.nav_account) {
+                startActivity(new Intent(this, AccountActivity.class));
+                return true;
+            }
+            return false;
+        });
+
+        // Setup FAB
+        fabAddProduct.setOnClickListener(v -> {
+            startActivity(new Intent(this, AddProductActivity.class));
+        });
 
         // Setup RecyclerView
         rvProducts.setLayoutManager(new GridLayoutManager(this, 2));
@@ -109,15 +133,15 @@ public class MarketplaceActivity extends AppCompatActivity {
         btnCatFurniture.setOnClickListener(v    -> selectCategory("Furniture"));
         btnCatOther.setOnClickListener(v        -> selectCategory("Other"));
 
-        seedSampleData(); // Re-enabled
+        seedSampleData();
         loadProducts();
     }
 
     private void loadProducts() {
         try {
-            ArrayList<Product> all = productDAO.getAllProducts();
+            ArrayList<com.javaoops.campuscycle.model.Product> all = productDAO.getAllProducts();
             allProducts.clear();
-            for (Product p : all) {
+            for (com.javaoops.campuscycle.model.Product p : all) {
                 if ("active".equals(p.getStatus())) {
                     allProducts.add(p);
                 }
@@ -134,7 +158,7 @@ public class MarketplaceActivity extends AppCompatActivity {
         Button[] allBtns = {btnCatAll, btnCatBooks, btnCatElectronics, btnCatClothing, btnCatFurniture, btnCatOther};
         for (Button b : allBtns) {
             b.setBackgroundResource(R.drawable.segmented_control_bg);
-            b.setTextColor(getResources().getColor(R.color.text_body));
+            b.setTextColor(getResources().getColor(R.color.black));
         }
 
         Button active = btnCatAll;
@@ -146,7 +170,7 @@ public class MarketplaceActivity extends AppCompatActivity {
             case "Other":       active = btnCatOther;       break;
         }
         active.setBackgroundResource(R.drawable.btn_primary_gradient);
-        active.setTextColor(getResources().getColor(R.color.white));
+        active.setTextColor(getResources().getColor(R.color.black));
 
         applyFilters();
     }
@@ -155,7 +179,7 @@ public class MarketplaceActivity extends AppCompatActivity {
         String query = etSearch.getText().toString().trim().toLowerCase();
 
         filteredProducts.clear();
-        for (Product p : allProducts) {
+        for (com.javaoops.campuscycle.model.Product p : allProducts) {
             boolean matchesCategory = currentCategory.equals("All") ||
                     p.getCategory().equalsIgnoreCase(currentCategory);
             boolean matchesSearch = query.isEmpty() ||
@@ -180,21 +204,21 @@ public class MarketplaceActivity extends AppCompatActivity {
 
     private void seedSampleData() {
         if (productDAO.getAllProducts().isEmpty()) {
-            Product[] samples = {
-                new Product(java.util.UUID.randomUUID().toString(), "iPad Pro", "Liquid Retina display, M2 chip", "Electronics", 1200, 900, "system", R.drawable.prod_ipad),
-                new Product(java.util.UUID.randomUUID().toString(), "Books Bundle", "Engineering & Math textbooks", "Books", 100, 75, "system", R.drawable.prod_books),
-                new Product(java.util.UUID.randomUUID().toString(), "Canon Camera", "Canon EOS R6 Mark II", "Electronics", 2000, 1500, "system", R.drawable.prod_camera),
-                new Product(java.util.UUID.randomUUID().toString(), "Sony Headphones", "Sony WH-1000XM5", "Electronics", 400, 300, "system", R.drawable.prod_headphones),
-                new Product(java.util.UUID.randomUUID().toString(), "Mountain Bike", "21-speed Matte Black Loop Bike", "Other", 160, 120, "system", R.drawable.prod_bike),
-                new Product(java.util.UUID.randomUUID().toString(), "Seiko Watch", "Automatic divers watch", "Other", 80, 60, "system", R.drawable.prod_watch)
+            com.javaoops.campuscycle.model.Product[] samples = {
+                new com.javaoops.campuscycle.model.Product(java.util.UUID.randomUUID().toString(), "iPad Pro", "Liquid Retina display, M2 chip", "Electronics", 1200, 900, "system", R.drawable.prod_ipad),
+                new com.javaoops.campuscycle.model.Product(java.util.UUID.randomUUID().toString(), "Books Bundle", "Engineering & Math textbooks", "Books", 100, 75, "system", R.drawable.prod_books),
+                new com.javaoops.campuscycle.model.Product(java.util.UUID.randomUUID().toString(), "Canon Camera", "Canon EOS R6 Mark II", "Electronics", 2000, 1500, "system", R.drawable.prod_camera),
+                new com.javaoops.campuscycle.model.Product(java.util.UUID.randomUUID().toString(), "Sony Headphones", "Sony WH-1000XM5", "Electronics", 400, 300, "system", R.drawable.prod_headphones),
+                new com.javaoops.campuscycle.model.Product(java.util.UUID.randomUUID().toString(), "Mountain Bike", "21-speed Matte Black Loop Bike", "Other", 160, 120, "system", R.drawable.prod_bike),
+                new com.javaoops.campuscycle.model.Product(java.util.UUID.randomUUID().toString(), "Seiko Watch", "Automatic divers watch", "Other", 80, 60, "system", R.drawable.prod_watch)
             };
-            for (Product p : samples) {
+            for (com.javaoops.campuscycle.model.Product p : samples) {
                 productDAO.insertProduct(p);
             }
         }
     }
 
-    private void addToCart(Product product) {
+    private void addToCart(com.javaoops.campuscycle.model.Product product) {
         if (currentBuyerId == null) {
             SharedPreferences prefs = getSharedPreferences("CampusCycleSession", MODE_PRIVATE);
             currentBuyerId = prefs.getString("userId", null);
@@ -218,6 +242,7 @@ public class MarketplaceActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bottomNavigation.setSelectedItemId(R.id.nav_market);
         loadProducts();
     }
 }

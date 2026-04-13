@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.javaoops.campuscycle.dao.OfferDAO;
 import com.javaoops.campuscycle.dao.ProductDAO;
 import com.javaoops.campuscycle.model.Offer;
@@ -34,6 +36,8 @@ public class SellerDashboardActivity extends AppCompatActivity {
     private ProgressBar scoreGauge;
     private RecyclerView rvInventory;
     private View btnLogout;
+    private FloatingActionButton fabAddProduct;
+    private BottomNavigationView bottomNavigation;
 
     private ProductDAO productDAO;
     private OfferDAO offerDAO;
@@ -48,9 +52,8 @@ public class SellerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller_dashboard);
 
-        // SharedPreferences prefs = getSharedPreferences("CampusCycleSession", MODE_PRIVATE);
-        // currentSellerId = prefs.getString("userId", null);
-        currentSellerId = "S1"; // Enforced as per session objective
+        SharedPreferences prefs = getSharedPreferences("CampusCycleSession", MODE_PRIVATE);
+        currentSellerId = prefs.getString("userId", null);
 
         if (currentSellerId == null) {
             startActivity(new Intent(this, LoginActivity.class));
@@ -79,13 +82,38 @@ public class SellerDashboardActivity extends AppCompatActivity {
         
         rvInventory   = findViewById(R.id.lvProducts);
         btnLogout     = findViewById(R.id.btnLogout);
+        fabAddProduct = findViewById(R.id.fabAddProduct);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+
+        // Setup Bottom Navigation
+        bottomNavigation.setSelectedItemId(R.id.nav_sell);
+        bottomNavigation.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MarketplaceActivity.class));
+                return true;
+            } else if (id == R.id.nav_market) {
+                startActivity(new Intent(this, MarketplaceActivity.class));
+                return true;
+            } else if (id == R.id.nav_sell) {
+                return true;
+            } else if (id == R.id.nav_account) {
+                startActivity(new Intent(this, AccountActivity.class));
+                return true;
+            }
+            return false;
+        });
+
+        // Setup FAB
+        fabAddProduct.setOnClickListener(v -> {
+            startActivity(new Intent(this, AddProductActivity.class));
+        });
 
         setupOffersRecyclerView();
-
         setupCategorySpinner();
         setupRecyclerView();
 
-        btnAddProduct.setOnClickListener(v -> startActivity(new Intent(this, AddProductActivity.class)));
+        btnAddProduct.setOnClickListener(v -> handleListItem());
         btnExport.setOnClickListener(v -> Toast.makeText(this, "Generating CSV Report...", Toast.LENGTH_SHORT).show());
         btnNewBatch.setOnClickListener(v -> {
             startActivity(new Intent(this, AddProductActivity.class));
@@ -300,6 +328,9 @@ public class SellerDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (bottomNavigation != null) {
+            bottomNavigation.setSelectedItemId(R.id.nav_sell);
+        }
         loadDashboard();
     }
 }
