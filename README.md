@@ -1,8 +1,8 @@
 # CampusCycle
 ### A University-Based Second-Hand Commerce Platform for Sustainable Student Living
 
-> **Built with** Java · Android · SQLite  
-> **Team:** Anshika Gupta · Hetanshi Vora · Atlas SkillTech University
+**Built with** Java · Android · SQLite  
+**Team:** Anshika Gupta · Hetanshi Vora · Atlas SkillTech University
 
 ---
 
