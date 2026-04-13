@@ -8,29 +8,26 @@
 
 ## Overview
 
-CampusCycle is a university-exclusive second-hand e-commerce Android application. Students can buy and sell pre-owned goods within a verified campus ecosystem using role-based access, SQLite persistence, and a clean layered architecture.
+CampusCycle is a university-exclusive second-hand e-commerce Android application. Every student gets a single unified account — no separate buyer or seller profiles. Any user can list a product, browse the marketplace, make offers, and place orders all from the same account. The platform uses SQLite persistence and a clean layered architecture to demonstrate advanced OOP principles.
 
 ---
 
 ## Features
 
-**Buyer**
+**Every user can:**
 - Browse and search the marketplace
-- View product details and add to cart
+- View product details
+- Add to cart and checkout
 - Make offers on products
-- Checkout and track order status
-- View order history
-
-**Seller**
-- Seller command center dashboard
-- Add, edit, and delete product listings
-- Inventory management
-- Accept or decline buyer offers
-- Demand-based notifications (auto-triggered on high views / cart adds)
+- Track order status and view order history
+- List their own products via the + button
+- Manage their personal inventory
+- Accept or decline offers on their listings
+- Receive demand-based notifications when their product gets high engagement
 
 **Auth**
 - University email-based registration and login
-- Role-based navigation with buyer / seller toggle
+- Single unified profile — buy and sell from the same account
 - Session persistence via SharedPreferences
 
 ---
@@ -40,30 +37,57 @@ CampusCycle is a university-exclusive second-hand e-commerce Android application
 ```mermaid
 flowchart TD
     A([User Opens App]) --> B[Login / Register]
-    B --> C{Role Selection}
-    C -->|Seller| D[SellerDashboardActivity]
-    C -->|Buyer| E[MarketplaceActivity]
+    B --> C[Marketplace]
 
-    D --> F[AddProductActivity]
-    D --> G[NotificationsActivity]
-    D --> H[InventoryView]
+    C --> D[ProductDetailsActivity]
+    C --> E[CartActivity]
+    C --> F[AddProductActivity\nvia + button]
+    C --> G[InventoryActivity]
 
-    E --> I[ProductDetailsActivity]
-    I --> J[CartActivity]
-    J --> K[CheckoutActivity]
-    K --> L[OrderHistoryActivity]
+    D --> E
+    E --> H[CheckoutActivity]
+    H --> I[OrderHistoryActivity]
 
-    F --> M[ProductService]
-    J --> N[OrderService]
-    K --> O[PaymentService]
+    F --> J[ProductService]
+    E --> K[OrderService]
+    H --> L[PaymentService]
 
-    M --> P[ProductDAO]
-    N --> Q[OrderDAO]
-    O --> R[CartDAO]
-    G --> S[NotificationDAO]
-    B --> T[UserDAO]
+    J --> M[ProductDAO]
+    K --> N[OrderDAO]
+    L --> O[CartDAO]
+    B --> P[UserDAO]
 
-    P & Q & R & S & T --> U[(SQLite\ncampuscycle.db)]
+    M & N & O & P --> Q[(SQLite\ncampuscycle.db)]
+```
+
+---
+
+## Navigation
+
+```mermaid
+flowchart LR
+    subgraph BottomNav["Bottom Navigation"]
+        N1[Home] 
+        N2[Market]
+        N3[Inventory]
+        N4[Account]
+    end
+
+    subgraph Actions["User Actions"]
+        A1[Browse Products] 
+        A2[Add to Cart]
+        A3[Make Offer]
+        A4[List Product via +]
+        A5[Manage Listings]
+        A6[Accept / Decline Offers]
+    end
+
+    N2 --> A1
+    A1 --> A2
+    A1 --> A3
+    N2 --> A4
+    N3 --> A5
+    N3 --> A6
 ```
 
 ---
@@ -72,23 +96,27 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    subgraph Buyer["Buyer Flow"]
-        B1[Browse Marketplace] --> B2[View Product]
+    subgraph Cart["Cart Flow"]
+        B1[Marketplace] --> B2[View Product]
         B2 --> B3[Add to Cart]
         B3 --> B4[Checkout]
         B4 --> B5[Order Confirmed]
-        B2 --> B6[Make Offer]
-        B6 --> B7[Await Seller Response]
     end
 
-    subgraph Seller["Seller Flow"]
-        S1[Dashboard] --> S2[Add Product]
-        S2 --> S3[Saved to DB]
-        S3 --> S4[Visible in Marketplace]
-        S1 --> S5[View Offers]
-        S5 --> S6{Accept / Decline}
-        S6 -->|Accept| S7[Order Created]
-        S1 --> S8[View Notifications]
+    subgraph Offer["Offer Flow"]
+        O1[View Product] --> O2[Make Offer]
+        O2 --> O3[Offer Stored in DB]
+        O3 --> O4[Seller Views Offer]
+        O4 --> O5{Accept / Decline}
+        O5 -->|Accept| O6[Order Created]
+    end
+
+    subgraph Listing["Listing Flow"]
+        L1[Tap + Button] --> L2[AddProductActivity]
+        L2 --> L3[Validation Applied]
+        L3 --> L4[Saved to DB]
+        L4 --> L5[Appears in Inventory]
+        L5 --> L6[Visible in Marketplace]
     end
 ```
 
@@ -104,7 +132,6 @@ classDiagram
         -String name
         -String universityId
         -String email
-        -String role
         -boolean isVerified
         +login() void*
         +logout() void*
@@ -135,6 +162,7 @@ classDiagram
         -String status
         -long viewCount
         -long cartCount
+        -String imageUri
         +setPrice(double)
     }
 
@@ -189,7 +217,6 @@ erDiagram
         TEXT name
         TEXT universityId
         TEXT email
-        TEXT role
         INTEGER isVerified
     }
     PRODUCTS {
@@ -203,6 +230,7 @@ erDiagram
         TEXT status
         INTEGER viewCount
         INTEGER cartCount
+        TEXT imageUri
         INTEGER timestamp
     }
     ORDERS {
@@ -229,23 +257,13 @@ erDiagram
         TEXT status
         INTEGER timestamp
     }
-    NOTIFICATIONS {
-        TEXT notifId PK
-        TEXT targetUserId FK
-        TEXT productId FK
-        TEXT type
-        TEXT message
-        INTEGER isRead
-        INTEGER timestamp
-    }
 
-    USERS ||--o{ PRODUCTS : "sells"
+    USERS ||--o{ PRODUCTS : "lists"
     USERS ||--o{ ORDERS : "places"
     PRODUCTS ||--o{ ORDERS : "ordered in"
     USERS ||--o{ CART : "has"
     PRODUCTS ||--o{ CART : "added to"
     PRODUCTS ||--o{ OFFERS : "receives"
-    USERS ||--o{ NOTIFICATIONS : "receives"
 ```
 
 ---
@@ -269,12 +287,13 @@ com.javaoops.campuscycle/
 │   ├── ProductDAO.java
 │   ├── OrderDAO.java
 │   ├── CartDAO.java
-│   └── NotificationDAO.java
+│   └── OfferDAO.java
 │
 ├── service/
 │   ├── ProductService.java     (implements Searchable)
 │   ├── OrderService.java
 │   ├── PaymentService.java     (implements Payable)
+│   ├── OfferService.java
 │   ├── NotificationService.java (implements Notifiable)
 │   └── DemandTracker.java      (implements Runnable)
 │
@@ -289,11 +308,12 @@ com.javaoops.campuscycle/
 └── (root)
     ├── LoginActivity.java
     ├── RegisterActivity.java
-    ├── SellerDashboardActivity.java
-    ├── AddProductActivity.java
     ├── MarketplaceActivity.java
+    ├── ProductDetailsActivity.java
+    ├── AddProductActivity.java
+    ├── InventoryActivity.java
     ├── CartActivity.java
-    ├── NotificationsActivity.java
+    ├── CheckoutActivity.java
     └── OrderHistoryActivity.java
 ```
 
