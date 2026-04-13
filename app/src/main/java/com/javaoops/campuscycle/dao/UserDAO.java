@@ -68,6 +68,20 @@ public class UserDAO {
         return result > 0;
     }
 
+    public java.util.ArrayList<String> getAllBuyerIds() {
+        java.util.ArrayList<String> ids = new java.util.ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query("users", new String[]{"userId"}, "role=?", new String[]{"buyer"}, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                ids.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return ids;
+    }
+
     public boolean deleteUser(String userId) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         long result = db.delete("users", "userId=?", new String[]{userId});

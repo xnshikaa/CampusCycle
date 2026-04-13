@@ -88,7 +88,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
             tvDesc.setText(product.getDescription());
             tvSellerName.setText(product.getSellerId().equals("system") ? "Campus Official" : product.getSellerId());
 
-            if (product.getImageResId() != 0) {
+            if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+                try {
+                    ivProduct.setImageURI(android.net.Uri.parse(product.getImageUri()));
+                } catch (Exception e) {
+                    ivProduct.setImageResource(R.drawable.card_background);
+                }
+            } else if (product.getImageResId() != 0) {
                 ivProduct.setImageResource(product.getImageResId());
             }
 

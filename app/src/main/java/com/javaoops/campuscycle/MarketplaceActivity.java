@@ -28,7 +28,7 @@ import java.util.List;
 public class MarketplaceActivity extends AppCompatActivity {
 
     private EditText etSearch;
-    private ImageButton btnCart, btnOrderHistory;
+    private ImageButton btnCart, btnOrderHistory, btnNotifications;
     private Button btnCatAll, btnCatBooks, btnCatElectronics, btnCatClothing, btnCatFurniture, btnCatOther;
     private RecyclerView rvProducts;
     private TextView tvEmpty;
@@ -63,6 +63,7 @@ public class MarketplaceActivity extends AppCompatActivity {
         tvEmpty            = findViewById(R.id.tvEmpty);
         btnCart            = findViewById(R.id.btnCart);
         btnOrderHistory    = findViewById(R.id.btnOrderHistory);
+        btnNotifications   = findViewById(R.id.btnNotifications);
         btnCatAll          = findViewById(R.id.btnCatAll);
         btnCatBooks        = findViewById(R.id.btnCatBooks);
         btnCatElectronics  = findViewById(R.id.btnCatElectronics);
@@ -90,6 +91,9 @@ public class MarketplaceActivity extends AppCompatActivity {
 
         btnOrderHistory.setOnClickListener(v ->
                 startActivity(new Intent(this, OrderHistoryActivity.class)));
+
+        btnNotifications.setOnClickListener(v ->
+                startActivity(new Intent(this, NotificationsActivity.class)));
 
         // Live Search implementation
         etSearch.addTextChangedListener(new android.text.TextWatcher() {
@@ -177,10 +181,10 @@ public class MarketplaceActivity extends AppCompatActivity {
     private void seedSampleData() {
         if (productDAO.getAllProducts().isEmpty()) {
             Product[] samples = {
-                new Product(java.util.UUID.randomUUID().toString(), "iPad Pro", "Liquid Retina display, M2 chip", "Electronics", 1133, 850, "system", R.drawable.prod_ipad),
-                new Product(java.util.UUID.randomUUID().toString(), "Books Bundle", "Engineering & Math textbooks", "Books", 60, 45, "system", R.drawable.prod_books),
-                new Product(java.util.UUID.randomUUID().toString(), "Canon Camera", "Canon EOS R6 Mark II", "Electronics", 2533, 1900, "system", R.drawable.prod_camera),
-                new Product(java.util.UUID.randomUUID().toString(), "Sony Headphones", "Sony WH-1000XM5", "Electronics", 373, 280, "system", R.drawable.prod_headphones),
+                new Product(java.util.UUID.randomUUID().toString(), "iPad Pro", "Liquid Retina display, M2 chip", "Electronics", 1200, 900, "system", R.drawable.prod_ipad),
+                new Product(java.util.UUID.randomUUID().toString(), "Books Bundle", "Engineering & Math textbooks", "Books", 100, 75, "system", R.drawable.prod_books),
+                new Product(java.util.UUID.randomUUID().toString(), "Canon Camera", "Canon EOS R6 Mark II", "Electronics", 2000, 1500, "system", R.drawable.prod_camera),
+                new Product(java.util.UUID.randomUUID().toString(), "Sony Headphones", "Sony WH-1000XM5", "Electronics", 400, 300, "system", R.drawable.prod_headphones),
                 new Product(java.util.UUID.randomUUID().toString(), "Mountain Bike", "21-speed Matte Black Loop Bike", "Other", 160, 120, "system", R.drawable.prod_bike),
                 new Product(java.util.UUID.randomUUID().toString(), "Seiko Watch", "Automatic divers watch", "Other", 80, 60, "system", R.drawable.prod_watch)
             };

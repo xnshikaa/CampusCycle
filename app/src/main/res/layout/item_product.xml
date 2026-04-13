@@ -37,6 +37,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- New Arrival Badge -->
+        <TextView
+            android:id="@+id/tvNewBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:background="@drawable/segmented_control_item_selected"
+            android:backgroundTint="@color/verified_green"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="NEW"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCondition" />
+
         <TextView
             android:id="@+id/tvBadge"
             android:layout_width="wrap_content"

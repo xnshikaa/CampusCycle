@@ -18,6 +18,9 @@ public class ProductDAO {
     }
 
     public boolean insertProduct(Product product) {
+        if (product.getPrice() > 0.75 * product.getMrp()) {
+            throw new IllegalArgumentException("Invalid pricing: exceeds 75% MRP");
+        }
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -33,6 +36,7 @@ public class ProductDAO {
             values.put("cartCount",   product.getCartCount());
             values.put("timestamp",   product.getTimestamp());
             values.put("imageResId",   product.getImageResId());
+            values.put("imageUri",     product.getImageUri());
             long result = db.insert("products", null, values);
             db.close();
             return result != -1;
@@ -66,6 +70,9 @@ public class ProductDAO {
     }
 
     public boolean updateProduct(Product product) {
+        if (product.getPrice() > 0.75 * product.getMrp()) {
+            throw new IllegalArgumentException("Invalid pricing: exceeds 75% MRP");
+        }
         try {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -78,6 +85,7 @@ public class ProductDAO {
             values.put("viewCount",   product.getViewCount());
             values.put("cartCount",   product.getCartCount());
             values.put("imageResId",   product.getImageResId());
+            values.put("imageUri",     product.getImageUri());
             int rows = db.update("products", values, "productId=?", new String[]{product.getProductId()});
             db.close();
             return rows > 0;
@@ -148,7 +156,7 @@ public class ProductDAO {
         p.setMrp(cursor.getDouble(cursor.getColumnIndexOrThrow("mrp")));
         try {
             p.setPrice(cursor.getDouble(cursor.getColumnIndexOrThrow("price")));
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         p.setSellerId(cursor.getString(cursor.getColumnIndexOrThrow("sellerId")));
@@ -157,6 +165,7 @@ public class ProductDAO {
         p.setCartCount(cursor.getLong(cursor.getColumnIndexOrThrow("cartCount")));
         p.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow("timestamp")));
         p.setImageResId(cursor.getInt(cursor.getColumnIndexOrThrow("imageResId")));
+        p.setImageUri(cursor.getString(cursor.getColumnIndexOrThrow("imageUri")));
         return p;
     }
 }

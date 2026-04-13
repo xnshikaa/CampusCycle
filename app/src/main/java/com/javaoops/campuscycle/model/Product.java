@@ -13,6 +13,7 @@ public class Product {
     private long cartCount;
     private long timestamp;
     private int imageResId;
+    private String imageUri;
 
     public String getProductId() {
         return productId;
@@ -75,7 +76,18 @@ public class Product {
     }
 
     public void setPrice(double price) {
+        if (price > 0.75 * this.mrp) {
+            throw new IllegalArgumentException("Price cannot exceed 75% of MRP");
+        }
         this.price = price;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public void setSellerId(String sellerId) {
@@ -116,13 +128,19 @@ public class Product {
         this.description = description;
         this.category = category;
         this.mrp = mrp;
-        this.price = price;
+        setPrice(price); // Use setter for validation
         this.sellerId = sellerId;
         this.status = "active";
         this.viewCount = 0;
         this.cartCount = 0;
         this.timestamp = System.currentTimeMillis();
-        this.imageResId = 0; // Default
+        this.imageResId = 0; 
+        this.imageUri = "";
+    }
+
+    public Product(String productId, String title, String description, String category, double mrp, double price, String sellerId, String imageUri) {
+        this(productId, title, description, category, mrp, price, sellerId);
+        this.imageUri = imageUri;
     }
 
     public Product(String productId, String title, String description, String category, double mrp, double price, String sellerId, int imageResId) {

@@ -42,7 +42,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvPrice.setText("₹" + (int)product.getPrice());
         holder.tvCategory.setText(product.getCategory());
 
-        if (product.getImageResId() != 0) {
+        if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+            try {
+                holder.ivProduct.setImageURI(android.net.Uri.parse(product.getImageUri()));
+            } catch (Exception e) {
+                holder.ivProduct.setImageResource(R.drawable.card_background);
+            }
+        } else if (product.getImageResId() != 0) {
             holder.ivProduct.setImageResource(product.getImageResId());
         }
 

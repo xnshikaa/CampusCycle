@@ -55,19 +55,25 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         holder.tvBadge.setText(product.getCategory().toUpperCase());
         holder.tvSeller.setText("Looping in " + product.getCategory());
 
-        if (product.getImageResId() != 0) {
+        if (product.getImageUri() != null && !product.getImageUri().isEmpty()) {
+            try {
+                holder.ivProduct.setImageURI(android.net.Uri.parse(product.getImageUri()));
+            } catch (Exception e) {
+                holder.ivProduct.setImageResource(R.drawable.card_background);
+            }
+        } else if (product.getImageResId() != 0) {
             holder.ivProduct.setImageResource(product.getImageResId());
         } else {
             holder.ivProduct.setImageResource(R.drawable.card_background);
         }
 
-        // Discount logic
-        if (product.getMrp() > product.getPrice()) {
-            int discount = (int) (((product.getMrp() - product.getPrice()) / product.getMrp()) * 100);
-            holder.tvDiscount.setText(discount + "% OFF");
-            holder.tvDiscount.setVisibility(View.VISIBLE);
+        // Check if product is "NEW" (listed in the last 24 hours)
+        long currentTime = System.currentTimeMillis();
+        long productTime = product.getTimestamp();
+        if (currentTime - productTime < 24 * 60 * 60 * 1000L) { // 24 hours
+            holder.tvNewBadge.setVisibility(View.VISIBLE);
         } else {
-            holder.tvDiscount.setVisibility(View.GONE);
+            holder.tvNewBadge.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -85,7 +91,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvPrice, tvBadge, tvSeller, tvCondition, tvDiscount;
+        TextView tvTitle, tvPrice, tvBadge, tvSeller, tvCondition, tvDiscount, tvNewBadge;
         ImageView ivProduct;
         View btnAddCart;
 
@@ -97,6 +103,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             tvSeller = itemView.findViewById(R.id.tvSellerInfo);
             tvCondition = itemView.findViewById(R.id.tvCondition);
             tvDiscount = itemView.findViewById(R.id.tvDiscount);
+            tvNewBadge = itemView.findViewById(R.id.tvNewBadge);
             ivProduct = itemView.findViewById(R.id.ivProduct);
             btnAddCart = itemView.findViewById(R.id.btnAddCart);
         }
