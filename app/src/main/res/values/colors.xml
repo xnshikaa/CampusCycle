@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background Tiers -->
+    <color name="surface_base">#0e0e0e</color>
+    <color name="surface_container_low">#131313</color>
+    <color name="surface_container_high">#1a1a1a</color>
+    <color name="surface_container_highest">#262626</color>
+    
+    <!-- Primary / Action -->
+    <color name="primary_violet">#bd9dff</color>
+    <color name="primary_violet_dim">#8a4cfc</color>
+    <color name="on_primary">#ffffff</color>
+    
+    <!-- Accents & Status -->
+    <color name="secondary_accent">#c38bf5</color>
+    <color name="tertiary_accent">#ff97b2</color>
+    <color name="verified_green">#4caf50</color>
+    <color name="error_red">#ff5252</color>
+    
+    <!-- Typography -->
+    <color name="text_headline">#ffffff</color>
+    <color name="text_body">#adaaaa</color>
+    <color name="text_hint">#4e4e4e</color>
+    
+    <!-- Utilities -->
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="ghost_border">#26ffffff</color>
+    <color name="divider">#1AFFFFFF</color>
+
+    <!-- Compat Mapping -->
+    <color name="background">@color/surface_base</color>
+    <color name="primary">@color/primary_violet</color>
+    <color name="primaryDark">#000000</color>
+    <color name="accent">@color/secondary_accent</color>
+    <color name="textPrimary">@color/text_headline</color>
+    <color name="textSecondary">@color/text_body</color>
+</resources>
